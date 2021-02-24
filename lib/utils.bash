@@ -38,18 +38,18 @@ download_release() {
   filename="$2"
 
   case $(uname | tr '[:upper:]' '[:lower:]') in
-  linux*)
-    local platform=linux
-    ;;
-  darwin*)
-    local platform=macos
-    ;;
-  windows*)
-    local platform=win
-    ;;
-  *)
-    fail "Platform $(uname | tr '[:upper:]' '[:lower:]') is not supported"
-    ;;
+    linux*)
+      local platform=linux
+      ;;
+    darwin*)
+      local platform=macos
+      ;;
+    windows*)
+      local platform=win
+      ;;
+    *)
+      fail "Platform $(uname | tr '[:upper:]' '[:lower:]') is not supported"
+      ;;
   esac
 
   url="$GH_REPO/releases/download/v${version}/codefresh-v${version}-${platform}-x64.tar.gz"
@@ -69,14 +69,14 @@ install_version() {
 
   local release_file="$install_path/codefresh-$version.tar.gz"
   (
-    mkdir -p "$install_path"
+    mkdir -p "$install_path/bin"
     download_release "$version" "$release_file"
-    tar -xzf "$release_file" -C "$install_path" --strip-components=1 || fail "Could not extract $release_file"
+    tar -xzf "$release_file" -C "$install_path" --strip-components=1 && mv "$install_path/codefresh" "$install_path/bin/" || fail "Could not extract $release_file"
     rm "$release_file"
 
     local tool_cmd
     tool_cmd="$(echo "codefresh version" | cut -d' ' -f1)"
-    test -x "$install_path/$tool_cmd" || fail "Expected $install_path/$tool_cmd to be executable."
+    test -x "$install_path/bin/$tool_cmd" || fail "Expected $install_path/bin/$tool_cmd to be executable."
 
     echo "codefresh $version installation was successful!"
   ) || (
