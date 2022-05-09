@@ -71,7 +71,7 @@ install_version() {
   (
     mkdir -p "$install_path/bin"
     download_release "$version" "$release_file"
-    tar -xzf "$release_file" -C "$install_path" --strip-components=1 && mv "$install_path/codefresh" "$install_path/bin/" || fail "Could not extract $release_file"
+    tar -xzf "$release_file" -C "$install_path" && mv "$install_path/codefresh" "$install_path/bin/" || fail "Could not extract $release_file"
     rm "$release_file"
 
     local tool_cmd
